@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Historiart – Ebook đa giác quan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Historiart – ebook đa giác quan, đọc tác phẩm Việt Nam kèm tìm kiếm và clip minh hoạ."
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="header-left">
+          <button
+            id="sidebarToggleBtn"
+            class="sidebar-toggle-btn"
+            type="button"
+            aria-label="Mở sidebar"
+          >
+            ☰
+          </button>
+          <div class="logo">H</div>
+          <div class="header-title">
+            <h1>Historiart</h1>
+            <p class="subtitle">Ebook đa giác quan</p>
+          </div>
+        </div>
+        <nav class="top-nav" aria-label="Điều hướng chính">
+          <button class="nav-item nav-item-active" data-view="home">Trang chủ</button>
+          <button class="nav-item" data-view="browse">Tìm sách</button>
+          <button class="nav-item" data-view="auth">Đăng nhập / Đăng ký</button>
+          <button class="nav-item" data-view="settings">Cài đặt</button>
+        </nav>
+        <div class="header-right">
+          <label class="search-label" for="searchInput">Tìm kiếm nhanh</label>
+          <div class="search-wrapper">
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Nhập từ khoá để lọc nội dung..."
+            />
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="reader" aria-label="Khu vực đọc sách">
+          <header class="reader-header">
+            <div class="reader-header-main">
+              <div class="reader-book-title">Historiart – An Tư</div>
+              <div id="searchResultInfo" class="search-result-info"></div>
+            </div>
+            <button
+              id="tocToggleBtn"
+              class="toc-toggle-btn"
+              type="button"
+              aria-label="Mở mục lục chương"
+            >
+              ☰ Mục lục
+            </button>
+          </header>
+
+          <article id="chapterContent" class="chapter-content">
+          </article>
+        </section>
+
+        <aside id="tocSidebar" class="toc-sidebar" aria-label="Sidebar">
+          <div class="sidebar-header">
+            <h2 class="section-heading">Menu</h2>
+            <button
+              id="sidebarCloseBtn"
+              class="sidebar-close-btn"
+              type="button"
+              aria-label="Đóng sidebar"
+            >
+              ✕
+            </button>
+          </div>
+          <div class="sidebar-content">
+            <div class="sidebar-section">
+              <button class="sidebar-section-toggle" data-section="toc">
+                <h3 class="sidebar-section-title">Mục lục</h3>
+                <span class="sidebar-section-icon">▼</span>
+              </button>
+              <div class="sidebar-section-content" id="tocSectionContent">
+                <nav id="chapterSidebar"></nav>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <button class="sidebar-section-toggle" data-section="highlight">
+                <h3 class="sidebar-section-title">Highlight</h3>
+                <span class="sidebar-section-icon">▼</span>
+              </button>
+              <div class="sidebar-section-content" id="highlightSectionContent">
+                <div class="sidebar-section-actions">
+                  <button class="sidebar-clear-btn" data-type="highlight" title="Xóa tất cả highlights">Xóa tất cả</button>
+                </div>
+                <div id="highlightsList" class="sidebar-list">
+                  <p class="sidebar-empty">Chưa có highlight nào</p>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <button class="sidebar-section-toggle" data-section="bookmark">
+                <h3 class="sidebar-section-title">Bookmark</h3>
+                <span class="sidebar-section-icon">▼</span>
+              </button>
+              <div class="sidebar-section-content" id="bookmarkSectionContent">
+                <div class="sidebar-section-actions">
+                  <button class="sidebar-clear-btn" data-type="bookmark" title="Xóa tất cả bookmarks">Xóa tất cả</button>
+                </div>
+                <div id="bookmarksList" class="sidebar-list">
+                  <p class="sidebar-empty">Chưa có bookmark nào</p>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-section">
+              <button class="sidebar-section-toggle" data-section="note">
+                <h3 class="sidebar-section-title">Note</h3>
+                <span class="sidebar-section-icon">▼</span>
+              </button>
+              <div class="sidebar-section-content" id="noteSectionContent">
+                <div class="sidebar-note-input">
+                  <textarea id="sidebarNoteInput" placeholder="Ghi note trực tiếp..." rows="3"></textarea>
+                  <button id="addSidebarNoteBtn" class="sidebar-add-note-btn">Thêm Note</button>
+                </div>
+                <div class="sidebar-section-actions">
+                  <button class="sidebar-clear-btn" data-type="note" title="Xóa tất cả notes">Xóa tất cả</button>
+                </div>
+                <div id="notesList" class="sidebar-list">
+                  <p class="sidebar-empty">Chưa có note nào</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>Historiart – ebook đa giác quan.</span>
+        <span>Demo truyện ngắn Việt Nam kèm clip minh hoạ.</span>
+      </footer>
+    </div>
+
+    <div id="videoOverlay" class="video-overlay" aria-hidden="true">
+      <div class="video-dialog" role="dialog" aria-modal="true">
+        <button id="closeVideoBtn" class="icon-button close-button" aria-label="Đóng video">
+          ✕
+        </button>
+        <div class="video-header">
+          <h2 id="videoTitle">Clip minh hoạ</h2>
+          <p id="videoDescription"></p>
+        </div>
+        <div class="video-body">
+          <div class="video-frame-wrapper">
+            <iframe
+              id="videoFrame"
+              src=""
+              title="Video minh hoạ"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="overlay-backdrop"></div>
+    </div>
+
+    <div id="imageOverlay" class="image-overlay" aria-hidden="true">
+      <div class="image-dialog" role="dialog" aria-modal="true">
+        <button id="closeImageBtn" class="icon-button close-button" aria-label="Đóng ảnh">
+          ✕
+        </button>
+        <div class="image-header">
+          <h2 id="imageTitle">Ảnh minh hoạ</h2>
+          <p id="imageDescription"></p>
+        </div>
+        <div class="image-body">
+          <img id="imageContent" src="" alt="Ảnh minh hoạ" />
+        </div>
+      </div>
+      <div class="overlay-backdrop"></div>
+    </div>
+
+    <div id="textContextMenu" class="text-context-menu" aria-hidden="true">
+      <button class="context-menu-item" data-action="highlight">🖍️ Highlight</button>
+      <button class="context-menu-item" data-action="bookmark">🔖 Bookmark</button>
+      <button class="context-menu-item" data-action="note">📝 Note</button>
+    </div>
+
+    <div id="noteDialog" class="note-dialog-overlay hidden" aria-hidden="true">
+      <div class="note-dialog" role="dialog" aria-modal="true">
+        <div class="note-dialog-header">
+          <h3>Thêm Note</h3>
+          <button id="closeNoteBtn" class="icon-button close-button" aria-label="Đóng">✕</button>
+        </div>
+        <div class="note-dialog-body">
+          <div class="note-selected-text" id="noteSelectedText"></div>
+          <textarea id="noteTextInput" placeholder="Nhập ghi chú của bạn..." rows="4"></textarea>
+        </div>
+        <div class="note-dialog-footer">
+          <button id="saveNoteBtn" class="note-save-btn">Lưu</button>
+          <button id="cancelNoteBtn" class="note-cancel-btn">Hủy</button>
+        </div>
+      </div>
+      <div class="overlay-backdrop"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
