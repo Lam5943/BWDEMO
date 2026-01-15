@@ -1,17 +1,1728 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="theme-light">
   <head>
     <meta charset="UTF-8" />
-    <title>Historiart – Ebook đa giác quan</title>
+    <title>Historiart – eBook đa giác quan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Historiart – ebook đa giác quan, đọc tác phẩm Việt Nam kèm tìm kiếm và clip minh hoạ."
-    />
-    <link rel="stylesheet" href="style.css" />
+    <meta name="description" content="Historiart – eBook đa giác quan, đọc tác phẩm Việt Nam kèm tìm kiếm và clip minh hoạ." />
+
+    <!-- CSS Variables & Reset -->
+    <style>
+*,*::before,*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Dark theme backgrounds */
+  --bg-primary-dark: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+  --bg-secondary-dark: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+  --bg-surface-dark: #020617;
+  --bg-card-dark: radial-gradient(circle at top left, #111827 0, #020617 70%);
+  --bg-sidebar-dark: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+
+  /* Light theme backgrounds */
+  --bg-primary-light: radial-gradient(circle at top, #eef2ff 0, #f5f5f7 40%, #f5f5f7 100%);
+  --bg-secondary-light: #f5f5f7;
+  --bg-surface-light: #ffffff;
+  --bg-card-light: #ffffff;
+  --bg-sidebar-light: #f9fafb;
+}
+
+html,body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh; /* Đảm bảo body ít nhất bằng viewport height */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-primary-dark);
+  color: #e5e7eb;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: flex-start; /* Đổi thành flex-start để content ở trên */
+}
+
+/* Wrapper để đảm bảo footer ở cuối */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  flex: 1; /* Đảm bảo app chiếm hết chiều cao còn lại */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Giữ nguyên để có khoảng cách đều */
+  padding: 1rem 2rem; /* Tăng padding */
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid #111827;
+  gap: 1rem; /* Tăng gap */
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center; /* Căn giữa các menu items */
+  flex: 1; /* Chiếm hết không gian còn lại */
+}
+
+.nav-item {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.82rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-item:hover {
+  background: rgba(31, 41, 55, 0.85);
+  color: #e5e7eb;
+}
+
+.nav-item-active {
+  background: radial-gradient(circle at left, #2563eb 0, #4f46e5 40%, #22c55e 100%);
+  color: #f9fafb;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #4f46e5 55%, #22c55e 100%);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.search-label {
+  font-size: 0.75rem;
+  color: #d1d5db;
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-wrapper input {
+  padding: 0.4rem 0.75rem;
+  min-width: 230px;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  font-size: 0.85rem;
+  outline: none;
+  background-color: #020617;
+  color: #e5e7eb;
+}
+
+.search-wrapper input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf833;
+}
+
+.main {
+  flex: 1;
+  display: block;
+  min-height: 0;
+  width: 100%;
+}
+
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 1.1rem;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  margin-right: 0.5rem;
+}
+
+.sidebar-toggle-btn:hover {
+  background: rgba(31, 41, 55, 0.95);
+}
+
+.toc-sidebar {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  padding: 0;
+  border-right: 1px solid #111827;
+  background: var(--bg-sidebar-dark);
+  z-index: 20;
+  box-shadow: 12px 0 30px rgba(0, 0, 0, 0.55);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.toc-sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.75rem 1rem;
+  border-bottom: 1px solid #111827;
+  flex-shrink: 0;
+}
+
+.sidebar-close-btn {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(31, 41, 55, 0.85);
+  color: #e5e7eb;
+}
+
+.sidebar-content {
+  padding: 0.75rem 1rem 1rem 1rem;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-section {
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-section:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar-section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-radius: 0.35rem;
+}
+
+.sidebar-section-toggle:hover {
+  background: rgba(31, 41, 55, 0.5);
+}
+
+.sidebar-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 600;
+  text-align: left;
+}
+
+.sidebar-section-icon {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-section.active .sidebar-section-icon {
+  transform: rotate(180deg);
+}
+
+.sidebar-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0;
+}
+
+.sidebar-section.active .sidebar-section-content {
+  max-height: 1000px;
+  padding: 0.5rem 0 0 0;
+}
+
+.sidebar-actions {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #1f2937;
+}
+
+.sidebar-clear-btn {
+  width: 100%;
+  border: 1px solid #dc2626;
+  background: transparent;
+  color: #ef4444;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-clear-btn:hover {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
+}
+
+.sidebar-note-input {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #1f2937;
+}
+
+.sidebar-note-input textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid #1f2937;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-note-input textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf833;
+}
+
+.sidebar-add-note-btn {
+  width: 100%;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #f9fafb;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.sidebar-add-note-btn:hover {
+  filter: brightness(1.1);
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sidebar-empty {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+  font-style: italic;
+}
+
+.sidebar-display-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.display-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #d1d5db;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+
+.display-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+
+.display-option span {
+  user-select: none;
+}
+
+.toc nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+#chapterSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.section-heading {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin: 0 0 0.5rem;
+}
+
+.book-meta {
+  background: radial-gradient(circle at top left, #111827 0, #020617 65%);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #111827;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+}
+
+.book-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #f9fafb;
+}
+
+.book-author,
+.book-tag {
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.book-tag {
+  margin-top: 0.25rem;
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.18);
+  color: #c7d2fe;
+}
+
+.toc nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.toc-button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0.35rem 0.4rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.toc-button .chapter-title {
+  font-weight: 500;
+}
+
+.toc-button .chapter-subtitle {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.toc-button:hover {
+  background: radial-gradient(circle at left, #1f2937 0, #020617 70%);
+}
+
+.toc-button.active {
+  background: linear-gradient(135deg, #2563eb, #22c55e);
+  color: #f9fafb;
+}
+
+.toc-button.active .chapter-subtitle {
+  color: #e5e7eb;
+}
+
+.help ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.help li + li {
+  margin-top: 0.25rem;
+}
+
+.reader {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 1rem 1.5rem 1rem; /* Giảm padding-bottom */
+  background: transparent;
+  width: 100%;
+  max-width: 100%;
+}
+
+.reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.reader-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.chapter-toc-inline {
+  display: none;
+}
+
+.reader-book-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.search-result-info {
+  font-size: 0.8rem;
+  color: #d1d5db;
+}
+
+.toc-toggle-btn {
+  position: fixed;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: rgba(15, 23, 42, 0.98);
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  padding: 0;
+  cursor: pointer;
+  z-index: 25;
+}
+
+.toc-toggle-btn:hover {
+  background: rgba(31, 41, 55, 0.95);
+}
+
+.chapter-content {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0.25rem 0 0;
+  overflow-y: auto;
+}
+
+.chapter-header {
+  border-bottom: 1px solid #111827;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+}
+
+.chapter-header-title {
+  font-size: 1rem;
+  margin: 0 0 0.15rem;
+  color: #f9fafb;
+}
+
+.chapter-header-subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #e5e7eb;
+}
+
+.chapter-header-author {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.chapter-body {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #e5e7eb;
+  text-align: left; /* Căn trái */
+  padding: 0 1.5rem; /* Thêm padding trái phải */
+  /* text-justify: inter-word; - chỉ dùng với justify */
+}
+
+.chapter-body p,
+.chapter-body li,
+.chapter-body div {
+  text-align: left; /* Căn trái */
+  /* text-justify: inter-word; - chỉ dùng với justify */
+}
+
+.chapter-body p {
+  margin: 0 0 0.8rem;
+}
+
+.chapter-body p:first-child {
+  text-indent: 1.5rem; /* Thụt đầu đoạn đầu tiên */
+}
+
+.chapter-body p:last-child {
+  margin-bottom: 0;
+}
+
+.chapter-body .highlight-search {
+  background-color: rgba(234, 179, 8, 0.26);
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.chapter-body .highlight-image {
+  background-color: rgba(59, 130, 246, 0.3);
+  padding: 0 2px;
+  border-radius: 3px;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.6);
+  transition: background-color 0.2s ease;
+}
+
+.chapter-body .highlight-image:hover {
+  background-color: rgba(59, 130, 246, 0.5);
+  cursor: pointer;
+}
+
+.context-note {
+  font-size: 0.82rem;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem; /* Tăng padding */
+  margin-bottom: 0.75rem;
+  border: 1px dashed #1f2937;
+  text-align: left; /* Căn trái */
+  /* text-justify: inter-word; - chỉ dùng với justify */
+}
+
+.context-note.disabled {
+  opacity: 0.6;
+}
+
+.highlight-image.disabled {
+  background-color: transparent !important;
+  cursor: default !important;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+.media-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #d1d5db;
+  margin-left: 0.25rem;
+}
+
+.media-hint.hidden {
+  display: none;
+}
+
+.media-hint-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #16a34a;
+}
+
+.media-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #15803d99;
+  background: radial-gradient(circle at left, #065f46 0, #15803d 45%, #052e16 100%);
+  color: #e5f5eb;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 0.35rem;
+}
+
+.media-button span {
+  font-size: 0.95em;
+}
+
+.media-button:hover {
+  filter: brightness(1.1);
+}
+
+.icon-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.footer {
+  border-top: 1px solid #020617;
+  background: #020617;
+  padding: 0.6rem 1.5rem;
+  margin-top: auto; /* Footer sẽ tự động đẩy xuống cuối */
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.browse-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.book-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid #111827;
+  background: var(--bg-card-dark);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+}
+
+.book-card-title {
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.book-card-meta {
+  font-size: 0.85rem;
+  color: #d1d5db;
+  margin: 0.2rem 0;
+}
+
+.book-card-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.book-card-button {
+  border: 1px solid #2563eb;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #f9fafb;
+  border-radius: 0.7rem;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.book-card-button:hover {
+  filter: brightness(1.05);
+}
+
+.auth-body {
+  max-width: 420px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-tabs {
+  display: inline-flex;
+  padding: 0.18rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #111827;
+  width: fit-content;
+}
+
+.auth-tab {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.auth-tab-active {
+  background: radial-gradient(circle at left, #2563eb 0, #4f46e5 40%);
+  color: #f9fafb;
+}
+
+.auth-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.auth-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.auth-fields input {
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+}
+
+.auth-fields input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf833;
+}
+
+.auth-submit {
+  margin-top: 0.3rem;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.45rem 0.9rem;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #f9fafb;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.auth-submit:hover {
+  filter: brightness(1.05);
+}
+
+.auth-note {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.settings-body {
+  max-width: 420px;
+}
+
+.settings-section h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+}
+
+.settings-section p {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  color: #d1d5db;
+}
+
+.theme-toggle-group {
+  display: inline-flex;
+  padding: 0.18rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #111827;
+}
+
+.theme-toggle-btn {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.theme-toggle-btn-active {
+  background: radial-gradient(circle at left, #2563eb 0, #4f46e5 40%);
+  color: #f9fafb;
+}
+
+/* Giao diện sáng */
+.theme-light body {
+  background: var(--bg-primary-light);
+  color: #111827;
+}
+
+.theme-light .header {
+  background: #ffffff;
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .header-title h1 {
+  color: #111827;
+}
+
+.theme-light .subtitle {
+  color: #6b7280;
+}
+
+.theme-light .search-label {
+  color: #6b7280;
+}
+
+.theme-light .search-wrapper input {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.theme-light .sidebar {
+  background: #f9fafb;
+  border-right-color: #e5e7eb;
+}
+
+.theme-light .book-meta {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.theme-light .book-author,
+.theme-light .book-tag {
+  color: #4b5563;
+}
+
+.theme-light .book-tag {
+  background: #e5edff;
+  color: #1d4ed8;
+}
+
+.theme-light .toc-button {
+  color: #111827;
+}
+
+.theme-light .toc-button .chapter-subtitle {
+  color: #6b7280;
+}
+
+.theme-light .toc-button:hover {
+  background: #e5edff;
+}
+
+.theme-light .toc-button.active {
+  background: #2563eb;
+  color: #f9fafb;
+}
+
+.theme-light .toc-button.active .chapter-subtitle {
+  color: #e5e7eb;
+}
+
+.theme-light .help ul {
+  color: #4b5563;
+}
+
+.theme-light .reader {
+  background: transparent;
+}
+
+.theme-light .chapter-content {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.theme-light .toc-sidebar {
+  background: var(--bg-sidebar-light);
+  border-right-color: #e5e7eb;
+}
+
+.theme-light .sidebar-toggle-btn {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+.theme-light .sidebar-toggle-btn:hover {
+  background: #f3f4f6;
+}
+
+.theme-light .sidebar-header {
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .sidebar-close-btn {
+  color: #6b7280;
+}
+
+.theme-light .sidebar-close-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.theme-light .sidebar-section-title {
+  color: #6b7280;
+}
+
+.theme-light .sidebar-empty {
+  color: #9ca3af;
+}
+
+.theme-light .display-option {
+  color: #4b5563;
+}
+
+.theme-light .display-option input[type="checkbox"] {
+  accent-color: #2563eb;
+}
+
+.theme-light .sidebar-section-toggle {
+  color: #111827;
+}
+
+.theme-light .sidebar-section-toggle:hover {
+  background: #f3f4f6;
+}
+
+.theme-light .sidebar-section-icon {
+  color: #6b7280;
+}
+
+.theme-light .sidebar-section-actions {
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .sidebar-clear-btn {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.theme-light .sidebar-clear-btn:hover {
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+}
+
+.theme-light .sidebar-note-input {
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .sidebar-note-input textarea {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.theme-light .sidebar-note-input textarea:focus {
+  border-color: #2563eb;
+}
+
+/* Text Context Menu */
+.text-context-menu {
+  position: fixed;
+  background: radial-gradient(circle at top left, #111827 0, #020617 70%);
+  border: 1px solid #1f2937;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  z-index: 1000; /* Higher z-index for mobile */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  max-width: 200px;
+  touch-action: none; /* Prevent touch scrolling on menu */
+}
+
+.text-context-menu.hidden {
+  display: none;
+}
+
+.context-menu-item {
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  transition: background 0.15s ease;
+}
+
+.context-menu-item:hover {
+  background: rgba(31, 41, 55, 0.85);
+}
+
+/* User Highlights */
+.user-highlight {
+  background-color: rgba(234, 179, 8, 0.35);
+  padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.user-highlight:hover {
+  background-color: rgba(234, 179, 8, 0.5);
+}
+
+/* Sidebar Items */
+.sidebar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #1f2937;
+  position: relative;
+  transition: background 0.15s ease;
+}
+
+.sidebar-item:hover {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.sidebar-item-text {
+  font-size: 0.8rem;
+  color: #d1d5db;
+  line-height: 1.4;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.sidebar-item-note-text {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+  font-style: italic;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.sidebar-item-delete {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.75rem;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s ease, color 0.15s ease;
+  opacity: 0;
+}
+
+.sidebar-item:hover .sidebar-item-delete {
+  opacity: 1;
+}
+
+.sidebar-item-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Note Dialog */
+.note-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.note-dialog-overlay:not(.hidden) {
+  display: flex;
+}
+
+.note-dialog-overlay.hidden {
+  display: none;
+}
+
+.note-dialog {
+  position: relative;
+  background: radial-gradient(circle at top left, #020617 0, #020617 65%);
+  border-radius: 0.9rem;
+  padding: 0;
+  width: min(500px, 90vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
+
+.note-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.75rem 1rem;
+  border-bottom: 1px solid #111827;
+}
+
+.note-dialog-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f9fafb;
+}
+
+.note-dialog-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.note-selected-text {
+  padding: 0.75rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px dashed #1f2937;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #d1d5db;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.note-dialog-body textarea {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+}
+
+.note-dialog-body textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px #38bdf833;
+}
+
+.note-dialog-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 1rem 1rem;
+  justify-content: flex-end;
+}
+
+.note-save-btn,
+.note-cancel-btn {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.note-save-btn {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #f9fafb;
+}
+
+.note-save-btn:hover {
+  filter: brightness(1.1);
+}
+
+.note-cancel-btn {
+  background: rgba(31, 41, 55, 0.85);
+  color: #e5e7eb;
+  border: 1px solid #1f2937;
+}
+
+.note-cancel-btn:hover {
+  background: rgba(31, 41, 55, 1);
+}
+
+/* Theme light cho các component mới */
+.theme-light .text-context-menu {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.theme-light .context-menu-item {
+  color: #111827;
+}
+
+.theme-light .context-menu-item:hover {
+  background: #f3f4f6;
+}
+
+.theme-light .user-highlight {
+  background-color: rgba(234, 179, 8, 0.25);
+}
+
+.theme-light .sidebar-item {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.theme-light .sidebar-item:hover {
+  background: #f9fafb;
+}
+
+.theme-light .sidebar-item-text {
+  color: #4b5563;
+}
+
+.theme-light .sidebar-item-note-text {
+  color: #6b7280;
+}
+
+.theme-light .note-dialog {
+  background: #ffffff;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+}
+
+.theme-light .note-dialog-header {
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .note-dialog-header h3 {
+  color: #111827;
+}
+
+.theme-light .note-selected-text {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #4b5563;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.theme-light .note-dialog-body textarea {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.theme-light .note-cancel-btn {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.theme-light .note-cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.theme-light .reader-book-title {
+  color: #111827;
+}
+
+.theme-light .search-result-info {
+  color: #6b7280;
+}
+
+.theme-light .chapter-content {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.theme-light .chapter-header {
+  border-bottom-color: #e5e7eb;
+}
+
+.theme-light .chapter-header-title {
+  color: #111827;
+}
+
+.theme-light .chapter-header-subtitle {
+  color: #4b5563;
+}
+
+.theme-light .chapter-header-author {
+  color: #6b7280;
+}
+
+.theme-light .chapter-body {
+  color: #111827;
+}
+
+.theme-light .context-note {
+  background: #f3f4ff;
+  border-color: #e5e7eb;
+  color: #4b5563;
+  text-align: left; /* Căn trái */
+}
+
+.theme-light .media-hint {
+  color: #6b7280;
+}
+
+.theme-light .auth-fields input {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.theme-light .settings-section p {
+  color: #4b5563;
+}
+
+.theme-light .footer {
+  background: #ffffff;
+  border-top-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.theme-light .book-card {
+  background: var(--bg-card-light);
+  border-color: #e5e7eb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+}
+
+.theme-light .book-card-title {
+  color: #111827;
+}
+
+.theme-light .book-card-meta {
+  color: #4b5563;
+}
+
+.theme-light .book-card-desc {
+  color: #111827;
+}
+
+/* Video overlay */
+.video-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.video-overlay.open {
+  display: flex;
+}
+
+.overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.video-dialog {
+  position: relative;
+  background: radial-gradient(circle at top left, #020617 0, #020617 65%);
+  border-radius: 0.9rem;
+  padding: 0.75rem 0.9rem 1rem;
+  width: min(720px, 94vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
+
+.video-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f9fafb;
+}
+
+.video-header p {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.video-body {
+  margin-top: 0.4rem;
+}
+
+.video-frame-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 0.7rem;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-frame-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #1f2937;
+  font-size: 0.82rem;
+  color: #e5e7eb;
+}
+
+.close-button:hover {
+  background: rgba(15, 23, 42, 1);
+}
+
+/* Image overlay */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.image-overlay.open {
+  display: flex;
+}
+
+.image-dialog {
+  position: relative;
+  background: radial-gradient(circle at top left, #020617 0, #020617 65%);
+  border-radius: 0.9rem;
+  padding: 0.75rem 0.9rem 1rem;
+  width: min(720px, 94vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
+
+.image-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #f9fafb;
+}
+
+.image-header p {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.image-header p a {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.image-body {
+  margin-top: 0.4rem;
+}
+
+.image-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.7rem;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.image-text-content {
+  width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 0.7rem;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: left; /* Căn trái */
+}
+
+.theme-light .image-text-content {
+  background: rgba(249, 250, 251, 0.8);
+  color: #111827;
+  text-align: left; /* Tùy chọn: left, center, right, justify */
+}
+
+.theme-light .image-dialog {
+  background: #ffffff;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+}
+
+.theme-light .image-header h2 {
+  color: #111827;
+}
+
+.theme-light .image-header p {
+  color: #4b5563;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    order: 2;
+  }
+
+  .reader {
+    order: 1;
+    padding: 0.75rem 1rem 1rem; /* Giảm padding-bottom trên tablet */
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem; /* Giảm padding trên mobile */
+  }
+
+  .header-right {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .search-wrapper input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .chapter-content {
+    padding: 1rem 1.1rem;
+  }
+
+  .chapter-body {
+    padding: 0 1rem; /* Giảm padding trên mobile */
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 0.6rem 0.9rem;
+  }
+
+  .sidebar {
+    padding: 0.75rem 0.9rem;
+  }
+
+  .reader {
+    padding: 0.75rem 0.9rem 1rem; /* Giảm padding-bottom trên mobile */
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .chapter-body {
+    padding: 0 0.75rem; /* Giảm padding trên mobile nhỏ */
+  }
+
+  .text-context-menu {
+    min-width: 120px;
+    max-width: 160px;
+    padding: 0.2rem;
+  }
+
+  .context-menu-item {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+    </style>
   </head>
   <body>
-    <div class="app">
+    <div class="page-wrapper">
+      <div class="app">
       <header class="header">
         <div class="header-left">
           <button
@@ -25,7 +1736,7 @@
           <div class="logo">H</div>
           <div class="header-title">
             <h1>Historiart</h1>
-            <p class="subtitle">Ebook đa giác quan</p>
+            <p class="subtitle">eBook đa giác quan</p>
           </div>
         </div>
         <nav class="top-nav" aria-label="Điều hướng chính">
@@ -50,7 +1761,7 @@
         <section class="reader" aria-label="Khu vực đọc sách">
           <header class="reader-header">
             <div class="reader-header-main">
-              <div class="reader-book-title">Historiart</div>
+              <div class="reader-book-title">Historiart – eBook đa giác quan</div>
               <div id="searchResultInfo" class="search-result-info"></div>
             </div>
             <button
@@ -135,13 +1846,31 @@
                 </div>
               </div>
             </div>
+            <div class="sidebar-section">
+              <button class="sidebar-section-toggle" data-section="display">
+                <h3 class="sidebar-section-title">Hiển thị</h3>
+                <span class="sidebar-section-icon">▼</span>
+              </button>
+              <div class="sidebar-section-content" id="displaySectionContent">
+                <div class="sidebar-display-options">
+                  <label class="display-option">
+                    <input type="checkbox" id="toggleContextNotes" checked>
+                    <span>Hiển thị cước chú</span>
+                  </label>
+                  <label class="display-option">
+                    <input type="checkbox" id="toggleMediaHints" checked>
+                    <span>Hiển thị thông tin media</span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </aside>
       </main>
 
       <footer class="footer">
-        <span>Historiart – ebook đa giác quan.</span>
-        <span>Demo truyện ngắn Việt Nam kèm clip minh hoạ.</span>
+        <span>Historiart – eBook đa giác quan.</span>
+        <span>Demo Project by Historiart.</span>
       </footer>
     </div>
 
@@ -161,8 +1890,10 @@
               src=""
               title="Video minh hoạ"
               frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              loading="lazy"
             ></iframe>
           </div>
         </div>
@@ -181,6 +1912,7 @@
         </div>
         <div class="image-body">
           <img id="imageContent" src="" alt="Ảnh minh hoạ" />
+          <div id="imageTextContent" class="image-text-content" style="display: none;"></div>
         </div>
       </div>
       <div class="overlay-backdrop"></div>
@@ -209,9 +1941,9 @@
       </div>
       <div class="overlay-backdrop"></div>
     </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
 </html>
-
 

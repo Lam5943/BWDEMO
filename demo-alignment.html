@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Căn chỉnh Header & Paragraph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .demo-header {
+            background: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .demo-text {
+            background: #fafafa;
+            padding: 20px 25px; /* Tăng padding */
+            border-radius: 5px;
+        }
+
+        /* Các tùy chọn căn chỉnh header */
+        .header-left { justify-content: flex-start; }
+        .header-center { justify-content: center; }
+        .header-right { justify-content: flex-end; }
+        .header-space-between { justify-content: space-between; }
+
+        /* Style cho demo header */
+        .demo-header {
+            background: #f0f0f0;
+            padding: 20px; /* Tăng padding */
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Các tùy chọn căn chỉnh text */
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-justify { text-align: justify; }
+
+        /* Style cho demo text */
+        .demo-text p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .demo-text p:first-child {
+            text-indent: 1.5rem; /* Thụt đầu đoạn */
+        }
+
+        .option-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .option-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Demo Căn chỉnh - Header căn giữa, Text căn trái + thụt đầu đoạn, Footer ở cuối viewport</h1>
+
+    <div class="demo-section">
+        <h2>1. Căn chỉnh Header</h2>
+        <div class="controls">
+            <button class="option-btn active" onclick="changeHeaderAlign('space-between')">Space Between</button>
+            <button class="option-btn" onclick="changeHeaderAlign('flex-start')">Trái</button>
+            <button class="option-btn" onclick="changeHeaderAlign('center')">Giữa</button>
+            <button class="option-btn" onclick="changeHeaderAlign('flex-end')">Phải</button>
+        </div>
+
+        <div class="demo-header header-space-between" id="demoHeader" style="display: flex; align-items: center;">
+            <div>Logo</div>
+            <div style="display: flex; justify-content: center; flex: 1; gap: 1rem;">
+                <div>Trang chủ</div>
+                <div>Tìm sách</div>
+                <div>Đăng nhập</div>
+                <div>Cài đặt</div>
+            </div>
+            <div>Search</div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>2. Căn chỉnh Paragraph</h2>
+        <div class="controls">
+            <button class="option-btn active" onclick="changeTextAlign('left')">Trái</button>
+            <button class="option-btn" onclick="changeTextAlign('center')">Giữa</button>
+            <button class="option-btn" onclick="changeTextAlign('right')">Phải</button>
+            <button class="option-btn" onclick="changeTextAlign('justify')">Căn đều</button>
+        </div>
+
+        <div class="demo-text text-left" id="demoText">
+            <p>Đây là đoạn đầu tiên sẽ được thụt vào để tạo điểm nhấn. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+            <p>Các đoạn tiếp theo vẫn căn trái bình thường. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>3. Cách áp dụng vào dự án của bạn</h2>
+        <p><strong>Đã áp dụng:</strong></p>
+        <ul>
+            <li><strong>Header:</strong> <code>justify-content: space-between</code> với nav căn giữa</li>
+            <li><strong>Paragraph:</strong> <code>text-align: left</code> (căn trái) + thụt đầu đoạn 1.5rem</li>
+            <li><strong>Padding:</strong> Header 1rem/2rem, Text 0/1.5rem</li>
+        </ul>
+
+        <h3>Chi tiết thay đổi:</h3>
+        <ul>
+            <li><strong>Header:</strong> <code>justify-content: space-between</code> + nav căn giữa</li>
+            <li><strong>Paragraph:</strong> Căn trái với thụt đầu đoạn 1.5rem cho đoạn đầu tiên</li>
+            <li><strong>Footer:</strong> <code>margin-top: auto</code> + page wrapper để footer luôn ở cuối viewport</li>
+            <li><strong>Layout:</strong> Flexbox layout với <code>min-height: 100vh</code></li>
+            <li><strong>Text-indent:</strong> Chỉ áp dụng cho <code>p:first-child</code></li>
+        </ul>
+
+        <p><strong>Lưu ý:</strong> Thụt đầu đoạn giúp tạo điểm nhấn cho phần mở đầu của chương sách. Footer được cố định ở cuối viewport để tạo cảm giác trang web hoàn chỉnh.</p>
+    </div>
+
+    <script>
+        function changeHeaderAlign(align) {
+            const header = document.getElementById('demoHeader');
+            header.className = 'demo-header header-' + align;
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.controls .option-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function changeTextAlign(align) {
+            const text = document.getElementById('demoText');
+            text.className = 'demo-text text-' + align;
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-section:nth-child(2) .controls .option-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

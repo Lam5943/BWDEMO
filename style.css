@@ -4,19 +4,45 @@
   box-sizing: border-box;
 }
 
+:root {
+  /* Dark theme backgrounds */
+  --bg-primary-dark: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+  --bg-secondary-dark: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+  --bg-surface-dark: #020617;
+  --bg-card-dark: radial-gradient(circle at top left, #111827 0, #020617 70%);
+  --bg-sidebar-dark: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+
+  /* Light theme backgrounds */
+  --bg-primary-light: radial-gradient(circle at top, #eef2ff 0, #f5f5f7 40%, #f5f5f7 100%);
+  --bg-secondary-light: #f5f5f7;
+  --bg-surface-light: #ffffff;
+  --bg-card-light: #ffffff;
+  --bg-sidebar-light: #f9fafb;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   height: 100%;
+  min-height: 100vh; /* Đảm bảo body ít nhất bằng viewport height */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #020617 0, #020617 45%, #020617 100%);
+  background: var(--bg-primary-dark);
   color: #e5e7eb;
 }
 
 body {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: flex-start; /* Đổi thành flex-start để content ở trên */
+}
+
+/* Wrapper để đảm bảo footer ở cuối */
+.page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .app {
@@ -26,16 +52,17 @@ body {
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
+  flex: 1; /* Đảm bảo app chiếm hết chiều cao còn lại */
 }
 
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.5rem;
+  justify-content: space-between; /* Giữ nguyên để có khoảng cách đều */
+  padding: 1rem 2rem; /* Tăng padding */
   background: rgba(15, 23, 42, 0.95);
   border-bottom: 1px solid #111827;
-  gap: 1rem;
+  gap: 1rem; /* Tăng gap */
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -46,6 +73,8 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  justify-content: center; /* Căn giữa các menu items */
+  flex: 1; /* Chiếm hết không gian còn lại */
 }
 
 .nav-item {
@@ -139,6 +168,7 @@ body {
   flex: 1;
   display: block;
   min-height: 0;
+  width: 100%;
 }
 
 .sidebar-toggle-btn {
@@ -170,7 +200,7 @@ body {
   width: 280px;
   padding: 0;
   border-right: 1px solid #111827;
-  background: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+  background: var(--bg-sidebar-dark);
   z-index: 20;
   box-shadow: 12px 0 30px rgba(0, 0, 0, 0.55);
   transform: translateX(-100%);
@@ -462,8 +492,10 @@ body {
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  padding: 1rem 1.5rem 1.5rem;
-  background: radial-gradient(circle at top, #020617 0, #020617 60%, #020617 100%);
+  padding: 1rem 1.5rem 1rem; /* Giảm padding-bottom */
+  background: transparent;
+  width: 100%;
+  max-width: 100%;
 }
 
 .reader-header {
@@ -556,10 +588,24 @@ body {
   font-size: 0.95rem;
   line-height: 1.65;
   color: #e5e7eb;
+  text-align: left; /* Căn trái */
+  padding: 0 1.5rem; /* Thêm padding trái phải */
+  /* text-justify: inter-word; - chỉ dùng với justify */
+}
+
+.chapter-body p,
+.chapter-body li,
+.chapter-body div {
+  text-align: left; /* Căn trái */
+  /* text-justify: inter-word; - chỉ dùng với justify */
 }
 
 .chapter-body p {
   margin: 0 0 0.8rem;
+}
+
+.chapter-body p:first-child {
+  text-indent: 1.5rem; /* Thụt đầu đoạn đầu tiên */
 }
 
 .chapter-body p:last-child {
@@ -590,9 +636,11 @@ body {
   color: #e5e7eb;
   background: rgba(15, 23, 42, 0.9);
   border-radius: 0.5rem;
-  padding: 0.5rem 0.65rem;
+  padding: 0.75rem 1rem; /* Tăng padding */
   margin-bottom: 0.75rem;
   border: 1px dashed #1f2937;
+  text-align: left; /* Căn trái */
+  /* text-justify: inter-word; - chỉ dùng với justify */
 }
 
 .media-hint {
@@ -643,6 +691,7 @@ body {
   border-top: 1px solid #020617;
   background: #020617;
   padding: 0.6rem 1.5rem;
+  margin-top: auto; /* Footer sẽ tự động đẩy xuống cuối */
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
@@ -663,7 +712,7 @@ body {
   padding: 1rem;
   border-radius: 0.9rem;
   border: 1px solid #111827;
-  background: radial-gradient(circle at top left, #111827 0, #020617 70%);
+  background: var(--bg-card-dark);
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
 }
 
@@ -682,6 +731,8 @@ body {
   margin: 0;
   font-size: 0.9rem;
   color: #e5e7eb;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .book-card-button {
@@ -820,7 +871,7 @@ body {
 
 /* Giao diện sáng */
 .theme-light body {
-  background: radial-gradient(circle at top, #eef2ff 0, #f5f5f7 40%, #f5f5f7 100%);
+  background: var(--bg-primary-light);
   color: #111827;
 }
 
@@ -894,7 +945,7 @@ body {
 }
 
 .theme-light .reader {
-  background: #f5f5f7;
+  background: var(--bg-secondary-light);
 }
 
 .theme-light .chapter-content {
@@ -904,7 +955,7 @@ body {
 }
 
 .theme-light .toc-sidebar {
-  background: #f9fafb;
+  background: var(--bg-sidebar-light);
   border-right-color: #e5e7eb;
 }
 
@@ -1046,6 +1097,8 @@ body {
   font-size: 0.8rem;
   color: #d1d5db;
   line-height: 1.4;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .sidebar-item-note-text {
@@ -1053,6 +1106,8 @@ body {
   color: #9ca3af;
   margin-top: 0.25rem;
   font-style: italic;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .sidebar-item-delete {
@@ -1144,6 +1199,8 @@ body {
   color: #d1d5db;
   font-style: italic;
   line-height: 1.5;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .note-dialog-body textarea {
@@ -1251,6 +1308,8 @@ body {
   background: #f9fafb;
   border-color: #e5e7eb;
   color: #4b5563;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .theme-light .note-dialog-body textarea {
@@ -1307,6 +1366,7 @@ body {
   background: #f3f4ff;
   border-color: #e5e7eb;
   color: #4b5563;
+  text-align: left; /* Căn trái */
 }
 
 .theme-light .media-hint {
@@ -1330,7 +1390,7 @@ body {
 }
 
 .theme-light .book-card {
-  background: #ffffff;
+  background: var(--bg-card-light);
   border-color: #e5e7eb;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
 }
@@ -1490,6 +1550,27 @@ body {
   object-fit: contain;
 }
 
+.image-text-content {
+  width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 0.7rem;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: left; /* Căn trái */
+}
+
+.theme-light .image-text-content {
+  background: rgba(249, 250, 251, 0.8);
+  color: #111827;
+  text-align: left; /* Tùy chọn: left, center, right, justify */
+}
+
 .theme-light .image-dialog {
   background: #ffffff;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
@@ -1515,16 +1596,18 @@ body {
 
   .reader {
     order: 1;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem 1rem; /* Giảm padding-bottom trên tablet */
   }
 
   .header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem; /* Giảm padding trên mobile */
   }
 
   .header-right {
-    align-items: flex-start;
+    align-items: stretch;
     width: 100%;
   }
 
@@ -1535,6 +1618,10 @@ body {
 
   .chapter-content {
     padding: 1rem 1.1rem;
+  }
+
+  .chapter-body {
+    padding: 0 1rem; /* Giảm padding trên mobile */
   }
 }
 
@@ -1547,9 +1634,17 @@ body {
     padding: 0.75rem 0.9rem;
   }
 
+  .reader {
+    padding: 0.75rem 0.9rem 1rem; /* Giảm padding-bottom trên mobile */
+  }
+
   .footer {
     flex-direction: column;
     gap: 0.25rem;
+  }
+
+  .chapter-body {
+    padding: 0 0.75rem; /* Giảm padding trên mobile nhỏ */
   }
 }
 

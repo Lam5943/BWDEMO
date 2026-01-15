@@ -1,12 +1,12 @@
 const book = {
   id: "an-tu-demo",
-  title: "An Tư",
+  title: "    An Tư",
   author: "Nguyễn Huy Tưởng",
   chapters: [
     {
       id: "an-tu",
       title: "An Tư",
-      subtitle: "Chương V",
+      subtitle: "    Chương V",
       contextNote: "",
       paragraphs: [
         "Đây đã đến nơi sa lệ và u nhã nhất trong các cung điện nhà Trần. An Tư bước qua bực cửa Thái Thanh, mở vào ao Ngoạn Thiền, trèo lên lầu Lâm Ba, rồi tiến vào cung Cảnh Linh là nơi Thoát Hoan đóng. Ở đây vườn hoa, cây cảnh, cầu nước, lầu đài, cùng hòa hợp để vẽ nên một cảnh không kém Bồng Lai, một nơi tuyệt mỹ đến nỗi cảnh trí ở đây trong tưởng tượng của dân gian đã thành một cói hoang đường.",
@@ -23,6 +23,20 @@ const book = {
           title: "Viên tướng Thoát Hoan",
           description: "Hình ảnh minh họa mô tả Thoát Hoan",
           imageUrl: "https://media.discordapp.net/attachments/1360290814399484107/1461024056332779623/thoat-hoan-cong-chua-an-tu-16813817258811518161047.png?ex=69690c2f&is=6967baaf&hm=d553bdaea57df5fe70484358e24f068ea8ba9ee4720c37174c0fffef368a2051&=&format=webp&quality=lossless",
+        },
+        {
+          startText: "An Tư",
+          endText: "An Tư",
+          title: "Công chúa An Tư",
+          description: "Cước chú về công chúa An Tư",
+          textContent: "Trong bản Ngọc phả về Công chúa Quỳnh Trân có viết: \"Năm Ất Dậu, giặc Nguyên do Ô Mã Nhi chỉ huy phạm vào Vân Đồn, Vạn Kiếp. Vua phải chạy vào Nghệ An. Triều đình bàn nhau định gả nàng cho tướng giặc để cầu thân. Nàng cự tuyệt, vua thương lại cho về chùa, rồi gả công chúa An Tư cho Thoát Hoan. [...]\".\n\nĐại Việt sử ký toàn thư chép rằng: \"Tháng 2 năm Thiệu Bảo thứ 7 (1285) vua sai người đưa công chúa An Tư (em gái út vua Trần Thánh Tông) đến cho Thoát Hoan là muốn làm thư dãn loạn nước vậy\".\n\nĐến Việt sử tiêu án của Ngô Thì Sĩ chỉ ghi: \"Thoát Hoan lên sông Nhĩ Hà, cột liền bè vào làm cầu cho quân qua sông. Quân ta theo hai bên sông lập đồn để cự lại, không được. Ngày đã về chiều, quân giặc qua được sông vào kinh thành, vua sai đưa Công chúa An Tư cho chúng, để thư nạn cho nước\".",
+        },
+        {
+          startText: "lầu Lâm Ba",
+          endText: "lầu Lâm Ba",
+          title: "Lầu Lâm Ba",
+          description: "Năm 2025, ban nhạc The Flob đã cho ra mắt bài hát \"lầu Lâm Ba\" để kể lại câu chuyện cuộc đời của công chúa An Tư",
+          videoUrl: "https://www.youtube.com/embed/1WtEJbHUE8M",
         },
       ],
       mediaHints: [],
@@ -47,6 +61,7 @@ const imageOverlayEl = document.getElementById("imageOverlay");
 const imageTitleEl = document.getElementById("imageTitle");
 const imageDescEl = document.getElementById("imageDescription");
 const imageContentEl = document.getElementById("imageContent");
+const imageTextContentEl = document.getElementById("imageTextContent");
 const closeImageBtn = document.getElementById("closeImageBtn");
 const navItems = document.querySelectorAll(".nav-item");
 const tocSidebarEl = document.getElementById("tocSidebar");
@@ -67,10 +82,15 @@ const notesListEl = document.getElementById("notesList");
 const sidebarNoteInput = document.getElementById("sidebarNoteInput");
 const addSidebarNoteBtn = document.getElementById("addSidebarNoteBtn");
 
+// Display settings elements
+const toggleContextNotesEl = document.getElementById("toggleContextNotes");
+const toggleMediaHintsEl = document.getElementById("toggleMediaHints");
+
 const THEME_STORAGE_KEY = "historiart-theme";
 const HIGHLIGHTS_STORAGE_KEY = "historiart-highlights";
 const BOOKMARKS_STORAGE_KEY = "historiart-bookmarks";
 const NOTES_STORAGE_KEY = "historiart-notes";
+const DISPLAY_SETTINGS_KEY = "historiart-display-settings";
 
 let highlights = JSON.parse(localStorage.getItem(HIGHLIGHTS_STORAGE_KEY) || "[]");
 let bookmarks = JSON.parse(localStorage.getItem(BOOKMARKS_STORAGE_KEY) || "[]");
@@ -78,6 +98,7 @@ let notes = JSON.parse(localStorage.getItem(NOTES_STORAGE_KEY) || "[]");
 
 let selectedText = null;
 let selectedRange = null;
+let isConfirmDialogOpen = false;
 
 function normalizeText(text) {
   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -150,7 +171,7 @@ function renderChapter() {
     <header class="chapter-header">
       <h2 class="chapter-header-title">${chapter.title}</h2>
       <p class="chapter-header-subtitle">${chapter.subtitle}</p>
-      <p class="chapter-header-author">Tác giả: ${book.author}</p>
+      <p class="chapter-header-author">    Tác giả: ${book.author}</p>
     </header>
   `;
 
@@ -161,6 +182,28 @@ function renderChapter() {
   const paragraphsHtml = chapter.paragraphs
     .map((p, index) => {
       let processed = p;
+      
+      // Xử lý imageHints TRƯỚC các highlight khác để đảm bảo tìm được text gốc
+      if (chapter.imageHints && chapter.imageHints.length > 0) {
+        chapter.imageHints.forEach((imageHint, hintIndex) => {
+          // Chỉ xử lý nếu startText và endText giống nhau (đánh dấu một từ/cụm từ)
+          if (imageHint.startText === imageHint.endText) {
+            const safeText = imageHint.startText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const regex = new RegExp(`(${safeText})`, "g");
+            processed = processed.replace(regex, `<span class="highlight-image" data-hint-index="${hintIndex}" data-chapter-id="${chapter.id}">$1</span>`);
+          } else {
+            // Xử lý trường hợp startText và endText khác nhau (đánh dấu một đoạn)
+            const searchStart = processed.indexOf(imageHint.startText);
+            const searchEnd = processed.indexOf(imageHint.endText);
+            if (searchStart !== -1 && searchEnd !== -1 && searchEnd > searchStart) {
+              const beforeText = processed.substring(0, searchStart);
+              const highlightText = processed.substring(searchStart, searchEnd + imageHint.endText.length);
+              const afterText = processed.substring(searchEnd + imageHint.endText.length);
+              processed = `${beforeText}<span class="highlight-image" data-hint-index="${hintIndex}" data-chapter-id="${chapter.id}">${highlightText}</span>${afterText}`;
+            }
+          }
+        });
+      }
       
       if (currentChapterHighlights.length > 0) {
         currentChapterHighlights.forEach((h) => {
@@ -178,19 +221,6 @@ function renderChapter() {
         if (processed !== before) {
           matchesCount += (processed.match(/highlight-search/g) || []).length;
         }
-      }
-      
-      if (chapter.imageHints && chapter.imageHints.length > 0) {
-        chapter.imageHints.forEach((imageHint) => {
-          const searchStart = processed.indexOf(imageHint.startText);
-          const searchEnd = processed.indexOf(imageHint.endText);
-          if (searchStart !== -1 && searchEnd !== -1 && searchEnd > searchStart) {
-            const beforeText = processed.substring(0, searchStart);
-            const highlightText = processed.substring(searchStart, searchEnd + imageHint.endText.length);
-            const afterText = processed.substring(searchEnd + imageHint.endText.length);
-            processed = `${beforeText}<span class="highlight-image" data-image-title="${imageHint.title}" data-image-desc="${imageHint.description}" data-image-url="${imageHint.imageUrl}">${highlightText}</span>${afterText}`;
-          }
-        });
       }
 
       const mediaHint = chapter.mediaHints.find(
@@ -246,6 +276,12 @@ function renderChapter() {
       hideContextMenu();
     }
   }
+
+  // Apply display settings after rendering
+  applyDisplaySettings();
+
+  // Attach handlers for image highlights
+  attachImageHandlers();
 }
 
 function renderHome() {
@@ -506,14 +542,29 @@ function attachMediaHandlers() {
 }
 
 function attachImageHandlers() {
-  const highlights = chapterContentEl.querySelectorAll(".highlight-image");
+  const highlights = chapterContentEl.querySelectorAll(".highlight-image:not(.disabled)");
   highlights.forEach((highlight) => {
     highlight.style.cursor = "pointer";
     highlight.addEventListener("click", () => {
-      const title = highlight.getAttribute("data-image-title") || "Ảnh minh hoạ";
-      const desc = highlight.getAttribute("data-image-desc") || "";
-      const url = highlight.getAttribute("data-image-url") || "";
-      openImage({ title, description: desc, imageUrl: url });
+      // Check if disabled before processing
+      if (highlight.classList.contains('disabled')) return;
+
+      const hintIndex = Number(highlight.getAttribute("data-hint-index"));
+      const chapterId = highlight.getAttribute("data-chapter-id");
+      const chapter = book.chapters.find((c) => c.id === chapterId);
+      if (!chapter || !chapter.imageHints || !chapter.imageHints[hintIndex]) return;
+
+      const imageHint = chapter.imageHints[hintIndex];
+      const title = imageHint.title || "Ảnh minh hoạ";
+      const desc = imageHint.description || "";
+
+      // Nếu có videoUrl, mở video overlay
+      if (imageHint.videoUrl) {
+        openVideo({ title, description: desc, url: imageHint.videoUrl });
+      } else {
+        // Nếu không có videoUrl, mở image overlay (có thể là ảnh hoặc text)
+        openImage({ title, description: desc, imageUrl: imageHint.imageUrl || "", textContent: imageHint.textContent || "" });
+      }
     });
   });
 }
@@ -536,18 +587,29 @@ function openVideo(media) {
 function closeVideo() {
   videoOverlayEl.classList.remove("open");
   videoOverlayEl.setAttribute("aria-hidden", "true");
-  videoFrameEl.src = "";
+  // Reset iframe to stop video playback
+  videoFrameEl.src = "about:blank";
 }
 
 function openImage(imageData) {
   imageTitleEl.textContent = imageData.title || "Ảnh minh hoạ";
   imageDescEl.textContent = imageData.description || "";
-  if (imageData.imageUrl) {
+  
+  if (imageData.textContent) {
+    // Hiển thị text content
+    imageTextContentEl.textContent = imageData.textContent;
+    imageTextContentEl.style.display = "block";
+    imageContentEl.style.display = "none";
+  } else if (imageData.imageUrl) {
+    // Hiển thị ảnh
     imageContentEl.src = imageData.imageUrl;
     imageContentEl.style.display = "block";
+    imageTextContentEl.style.display = "none";
   } else {
     imageContentEl.style.display = "none";
+    imageTextContentEl.style.display = "none";
   }
+  
   imageOverlayEl.classList.add("open");
   imageOverlayEl.setAttribute("aria-hidden", "false");
 }
@@ -556,6 +618,8 @@ function closeImage() {
   imageOverlayEl.classList.remove("open");
   imageOverlayEl.setAttribute("aria-hidden", "true");
   imageContentEl.src = "";
+  imageTextContentEl.textContent = "";
+  imageTextContentEl.style.display = "none";
 }
 
 if (searchInput) {
@@ -734,15 +798,43 @@ navItems.forEach((item) => {
 
 function attachTextSelectionHandlers() {
   if (!chapterContentEl || currentView !== "book") return;
-  
+
+  // Desktop: mouse events
   chapterContentEl.addEventListener("mouseup", handleTextSelection);
-  
+
+// Mobile: touch and selection events
+chapterContentEl.addEventListener("touchend", handleTextSelection);
+document.addEventListener("selectionchange", handleSelectionChange);
+
+// Mobile: long press detection
+let longPressTimer;
+chapterContentEl.addEventListener("touchstart", (e) => {
+  longPressTimer = setTimeout(() => {
+    // Long press detected, handle selection
+    handleTextSelection(e);
+  }, 500);
+});
+
+chapterContentEl.addEventListener("touchend", () => {
+  clearTimeout(longPressTimer);
+});
+
+chapterContentEl.addEventListener("touchmove", () => {
+  clearTimeout(longPressTimer);
+});
+
+  // Prevent default context menu on chapter content
+  chapterContentEl.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    return false;
+  });
+
   document.addEventListener("click", (e) => {
     if (textContextMenu && !textContextMenu.contains(e.target) && !textContextMenu.classList.contains("hidden")) {
       hideContextMenu();
     }
   });
-  
+
   const contextMenuItems = textContextMenu?.querySelectorAll(".context-menu-item");
   contextMenuItems?.forEach((item) => {
     item.addEventListener("click", (e) => {
@@ -754,16 +846,17 @@ function attachTextSelectionHandlers() {
 
 function handleTextSelection(e) {
   if (currentView !== "book") return;
-  
-  setTimeout(() => {
+
+  // Use requestAnimationFrame for better performance instead of setTimeout
+  requestAnimationFrame(() => {
     const selection = window.getSelection();
     const text = selection.toString().trim();
-    
+
     if (text.length === 0) {
       hideContextMenu();
       return;
     }
-    
+
     const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
     if (range) {
       const container = range.commonAncestorContainer;
@@ -772,21 +865,78 @@ function handleTextSelection(e) {
         return;
       }
     }
-    
+
     if (selection.rangeCount > 0) {
       selectedRange = selection.getRangeAt(0).cloneRange();
       selectedText = text;
-      
+
       const rect = selection.getRangeAt(0).getBoundingClientRect();
       showContextMenu(rect.left + rect.width / 2, rect.top - 10);
     }
-  }, 10);
+  });
+}
+
+function handleSelectionChange() {
+  if (currentView !== "book") return;
+
+  requestAnimationFrame(() => {
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+
+    if (text.length === 0) {
+      hideContextMenu();
+      return;
+    }
+
+    const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    if (range) {
+      const container = range.commonAncestorContainer;
+      const parent = container.nodeType === 3 ? container.parentElement : container;
+      if (parent.closest('.user-highlight')) {
+        return;
+      }
+    }
+
+    if (selection.rangeCount > 0) {
+      selectedRange = selection.getRangeAt(0).cloneRange();
+      selectedText = text;
+
+      const rect = selection.getRangeAt(0).getBoundingClientRect();
+      // Show context menu at the center of selection for mobile
+      showContextMenu(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+  });
 }
 
 function showContextMenu(x, y) {
   if (!textContextMenu) return;
-  textContextMenu.style.left = `${x}px`;
-  textContextMenu.style.top = `${y}px`;
+
+  // Ensure menu stays within viewport bounds
+  const menuRect = textContextMenu.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  let finalX = x;
+  let finalY = y;
+
+  // Adjust horizontal position
+  if (x + menuRect.width > viewportWidth) {
+    finalX = viewportWidth - menuRect.width - 10;
+  }
+  if (finalX < 10) {
+    finalX = 10;
+  }
+
+  // Adjust vertical position
+  if (y + menuRect.height > viewportHeight) {
+    finalY = y - menuRect.height - 10;
+  }
+  if (finalY < 10) {
+    finalY = 10;
+  }
+
+  textContextMenu.style.left = `${finalX}px`;
+  textContextMenu.style.top = `${finalY}px`;
   textContextMenu.classList.remove("hidden");
   textContextMenu.setAttribute("aria-hidden", "false");
 }
@@ -955,9 +1105,23 @@ function attachClearAllHandlers() {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       const type = btn.getAttribute("data-type");
-      if (confirm(`Bạn có chắc muốn xóa tất cả ${type === "highlight" ? "highlights" : type === "bookmark" ? "bookmarks" : "notes"}?`)) {
+
+      // Prevent multiple confirm dialogs
+      if (isConfirmDialogOpen) {
+        return;
+      }
+
+      isConfirmDialogOpen = true;
+      const confirmed = confirm(`Bạn có chắc muốn xóa tất cả ${type === "highlight" ? "highlights" : type === "bookmark" ? "bookmarks" : "notes"}?`);
+
+      if (confirmed) {
         clearAllItems(type);
       }
+
+      // Reset flag after a short delay to allow for dialog animation
+      setTimeout(() => {
+        isConfirmDialogOpen = false;
+      }, 100);
     });
   });
 }
@@ -1028,8 +1192,85 @@ function ensureSidebarClosed() {
   }
 }
 
+// Display settings functions
+function getDefaultDisplaySettings() {
+  return {
+    contextNotes: true,
+    mediaHints: true
+  };
+}
+
+function getDisplaySettings() {
+  try {
+    const stored = window.localStorage.getItem(DISPLAY_SETTINGS_KEY);
+    if (stored) {
+      return { ...getDefaultDisplaySettings(), ...JSON.parse(stored) };
+    }
+  } catch (e) {
+    console.warn("Failed to load display settings:", e);
+  }
+  return getDefaultDisplaySettings();
+}
+
+function saveDisplaySettings(settings) {
+  try {
+    window.localStorage.setItem(DISPLAY_SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) {
+    console.warn("Failed to save display settings:", e);
+  }
+}
+
+function applyDisplaySettings() {
+  const settings = getDisplaySettings();
+
+  // Update checkboxes
+  if (toggleContextNotesEl) {
+    toggleContextNotesEl.checked = settings.contextNotes;
+  }
+  if (toggleMediaHintsEl) {
+    toggleMediaHintsEl.checked = settings.mediaHints;
+  }
+
+  // Apply highlight state - if contextNotes is true, enable highlights; if false, disable highlights
+  document.querySelectorAll('.context-note').forEach(el => {
+    el.classList.toggle('disabled', !settings.contextNotes);
+  });
+
+  document.querySelectorAll('.highlight-image').forEach(el => {
+    el.classList.toggle('disabled', !settings.contextNotes);
+  });
+
+  // Media hints visibility
+  document.querySelectorAll('.media-hint').forEach(el => {
+    el.classList.toggle('hidden', !settings.mediaHints);
+  });
+}
+
+function initDisplaySettings() {
+  if (toggleContextNotesEl) {
+    toggleContextNotesEl.addEventListener('change', () => {
+      const settings = getDisplaySettings();
+      settings.contextNotes = toggleContextNotesEl.checked;
+      saveDisplaySettings(settings);
+      applyDisplaySettings();
+    });
+  }
+
+  if (toggleMediaHintsEl) {
+    toggleMediaHintsEl.addEventListener('change', () => {
+      const settings = getDisplaySettings();
+      settings.mediaHints = toggleMediaHintsEl.checked;
+      saveDisplaySettings(settings);
+      applyDisplaySettings();
+    });
+  }
+
+  applyDisplaySettings();
+}
+
 applyTheme(getCurrentTheme());
 setSidebarToggleVisible(false);
+initDisplaySettings();
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", ensureSidebarClosed);
